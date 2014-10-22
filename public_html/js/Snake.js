@@ -1,6 +1,6 @@
-/* ---------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------
  * Variables
- * ---------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  */
 
 var snake;
@@ -13,19 +13,19 @@ var food;
 var context;
 var screenWidth;
 var screenHeight;
-
-/* ***************************************************************************
+ 
+/* *****************************************************************************
  * Executing Game Code
- * ***************************************************************************
+ * *****************************************************************************
  */
 gameInitialize(); 
 snakeInitialize();
 foodInitialize();
 setInterval (gameLoop, 1000/30);
 
-/*#############################################################################
+/*##############################################################################
  * Game Functions
- * ############################################################################
+ * #############################################################################
  */
 
 function gameInitialize()  {
@@ -53,16 +53,16 @@ function gameDraw()  {
     context.fillRect(0, 0, screenWidth, screenHeight);
 }
 
-/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  * Snake Functions
- * $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ * $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
  */
 
 function snakeInitialize() {
     snake = [];
     snakeLength = 5;
     snakeSize = 20;
-    snakeDirection = "up";
+    snakeDirection = "down";
     
     for(var index = snakeLength - 1; index >= 0; index--) {
         snake.push( {
@@ -86,7 +86,7 @@ function snakeUpdate() {
     if(snakeDirection === "down") {
         snakeHeadY++;
     }
-    else {
+    else if(snakeDirection === "right"){
         snakeHeadX++;
     }
     
@@ -96,9 +96,9 @@ function snakeUpdate() {
     snake.unshift(snakeTail);
 }
 
-/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  * Food Functions
- * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  */
 
 function foodInitialize() {
@@ -111,17 +111,28 @@ function foodInitialize() {
 
 function foodDraw() {
     context.fillStyle = "red";
-    context.fillRect(food.x, food.y, snakeSize, snakeSize);
+    context.fillRect(food.x * snakeSize, food.y * snakeSize, snakeSize, snakeSize);
 }
 
 function setFoodPosition() {
     var randomX = Math.floor(Math.random() * screenWidth);
     var randomY = Math.floor(Math.random() * screenHeight);
     
-    food.x = randomX;
-    food.y = randomY;
+    food.x = Math.floor(randomX / snakeSize);
+    food.y = Math.floor(randomY / snakeSize);
 }
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ * Imput function
+ * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ */
 
 function keyboardHandler(event) {
     console.log(event);
+    
+    if(event.keyCode === "39") {
+       snakeDirection = "right";
+    }
+    else if(event.keyCode === "440") {
+        snakeDirection = "down";
+    }
 }
