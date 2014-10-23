@@ -38,7 +38,7 @@ function gameInitialize()  {
     canvas.width = screenWidth;
     canvas.height = screenHeight;
     
-    document.addEventListener("keyDown", keyboardHandler);
+    document.addEventListener("keydown", keyboardHandler);
 }
 
 function gameLoop()  {
@@ -60,7 +60,7 @@ function gameDraw()  {
 
 function snakeInitialize() {
     snake = [];
-    snakeLength = 5;
+    snakeLength = 1;
     snakeSize = 20;
     snakeDirection = "down";
     
@@ -83,12 +83,21 @@ function snakeUpdate() {
     var snakeHeadX = snake[0].x;
     var snakeHeadY = snake[0].y;
     
-    if(snakeDirection === "down") {
+    if(snakeDirection == "down") {
         snakeHeadY++;
     }
-    else if(snakeDirection === "right"){
+    else if(snakeDirection == "right"){
         snakeHeadX++;
     }
+    else if(snakeDirection == "up"){
+        snakeHeadY--;
+    }
+    else if(snakeDirection == "left"){
+        snakeHeadX--;
+    }
+    
+    checkFoodCollision(snakeHeadX, snakeHeadY);
+    checkWallCollision(snakeHeadX, snakeHeadY);
     
     var snakeTail = snake.pop();
     snakeTail.x = snakeHeadX;
@@ -129,10 +138,37 @@ function setFoodPosition() {
 function keyboardHandler(event) {
     console.log(event);
     
-    if(event.keyCode === "39") {
+    if(event.keyCode == "39" && snakeDirection != "left") {
        snakeDirection = "right";
     }
-    else if(event.keyCode === "440") {
+    else if(event.keyCode == "40" && snakeDirection != "up") {
         snakeDirection = "down";
+    }
+    else if(event.keyCode == "38" && snakeDirection != "down") {
+        snakeDirection = "up";
+    }
+    else if(event.keyCode == "37" && snakeDirection != "right") {
+        snakeDirection = "left";
+    }
+
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ * Collision Handling
+ * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ */
+
+function checkFoodCollision(snakeHeadX, snakeHeadY) {
+    if(snakeHeadX == food.x && snakeHeadY == food.y) {
+        snake.push({
+            x: 0,
+            y: 0
+        });
+        snakeLength++;
+    }
+}
+
+function checkWallCollision(snakeHeadX, snakeHeadY) {
+    if(snakeHeadX * snakeSize >= screenWidth || snakeHeadX * snakeSize < 0) {
+        console.log("WallCollision");
     }
 }
