@@ -23,7 +23,7 @@ var gameState;
  */
 gameInitialize();
 snakeInitialize();
-foodInitialize();j
+foodInitialize();
 setInterval(gameLoop, 1000/30);
 
 /*##############################################################################
@@ -150,13 +150,14 @@ function keyboardHandler(event) {
     }
     else if (event.keyCode == "40" && snakeDirection != "up") {
         snakeDirection = "down";
-    }/*
+    }
     else if (event.keyCode == "38" && snakeDirection != "down") {
         snakeDirection = "up";
     }
     else if (event.keyCode == "37" && snakeDirection != "right") {
         snakeDirection = "left";
-    }*/
+    }
+}
 
 
     /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,6 +172,10 @@ function keyboardHandler(event) {
                 y: 0
             });
             snakeLength++;
+            var randomX = Math.floor(Math.random() * screenWidth);
+            var randomY = Math.floor(Math.random() * screenHeight);
+            food.x = Math.floor(randomX / snakeSize);
+            food.y = Math.floor(randomY / snakeSize);
         }
     }
 
