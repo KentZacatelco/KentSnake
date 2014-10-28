@@ -12,3 +12,26 @@ body {
     position: absolute;
     visibility: hidden;
 }
+
+h1, h3 {
+    font-family: 'Squada One', cursive;
+    color: lime;
+    text-align: center;
+}
+
+.title {
+    font-size: 300px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+#restartButton {
+    font-size: 100px;
+    margin-top: 0px;
+    border: 20px solid lime;
+    border-radius: 10px;
+}
+
+#restartButton:hover {
+    background-color: aqua;
+}
