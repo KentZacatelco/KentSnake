@@ -9,6 +9,7 @@ var snakeSize;
 var snakeDirection;
 
 var food;
+var poison;
 
 var context;
 var screenWidth;
@@ -27,6 +28,7 @@ var scoreboard;
 gameInitialize();
 snakeInitialize();
 foodInitialize();
+poisonInitialize();
 setInterval(gameLoop, 1000/30);
 
 /*##############################################################################
@@ -47,7 +49,6 @@ function gameInitialize() {
     document.addEventListener("keydown", keyboardHandler);
     
     gameOverMenu = document.getElementById("gameOver");
-    /*centerMenuPosition(gameOverMenu);*/
     
     restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", gameRestart);
@@ -61,9 +62,10 @@ function gameInitialize() {
 function gameLoop() {
     gameDraw();
     drawScoreBoard();
-    if (gameState == "PLAY") {
+    if (gameState === "PLAY") {
         snakeUpdate();
         snakeDraw();
+        poisonDraw();
         foodDraw();
     }
 }
@@ -76,6 +78,7 @@ function gameDraw() {
 function gameRestart() {
     snakeInitialize();
     foodInitialize();
+    poisonInitialize();
     hideMenu(gameOverMenu);
     setState("PLAY");
 }
@@ -87,7 +90,7 @@ function gameRestart() {
 
 function snakeInitialize() {
     snake = [];
-    snakeLength = 1;
+    snakeLength = 5;
     snakeSize = 20;
     snakeDirection = "down";
 
@@ -110,20 +113,21 @@ function snakeUpdate() {
     var snakeHeadX = snake[0].x;
     var snakeHeadY = snake[0].y;
 
-    if (snakeDirection == "down") {
+    if (snakeDirection === "down") {
         snakeHeadY++;
     }
-    else if (snakeDirection == "right") {
+    else if (snakeDirection === "right") {
         snakeHeadX++;
     }
-    else if (snakeDirection == "up") {
+    else if (snakeDirection === "up") {
         snakeHeadY--;
     }
-    else if (snakeDirection == "left") {
+    else if (snakeDirection === "left") {
         snakeHeadX--;
     }
 
     checkFoodCollisions(snakeHeadX, snakeHeadY);
+    checkPoisonCollisions(snakeHeadX, snakeHeadY);
     checkWallCollisions(snakeHeadX, snakeHeadY);
     checkSnakeCollisions(snakeHeadX, snakeHeadY);
 
@@ -157,6 +161,31 @@ function setFoodPosition() {
 
     food.x = Math.floor(randomX / snakeSize);
     food.y = Math.floor(randomY / snakeSize);
+}
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ * Poison Functions
+ * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ */
+
+function poisonInitialize() {
+    poison = {
+        x: 0,
+        y: 0
+    };
+    setPoisonPosition();
+}
+
+function poisonDraw() {
+    context.fillStyle = "red";
+    context.fillRect(poison.x * snakeSize, poison.y * snakeSize, snakeSize, snakeSize);
+}
+
+function setPoisonPosition() {
+    var randomX = Math.floor(Math.random() * screenWidth);
+    var randomY = Math.floor(Math.random() * screenHeight);
+
+    poison.x = Math.floor(randomX / snakeSize);
+    poison.y = Math.floor(randomY / snakeSize);
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * Imput function
@@ -193,6 +222,28 @@ function checkFoodCollisions(snakeHeadX, snakeHeadY) {
             y: 0
         });
         snakeLength++;
+        var randomX = Math.floor(Math.random() * screenWidth);
+        var randomY = Math.floor(Math.random() * screenHeight);
+        food.x = Math.floor(randomX / snakeSize);
+        food.y = Math.floor(randomY / snakeSize);
+        var randomX = Math.floor(Math.random() * screenWidth);
+        var randomY = Math.floor(Math.random() * screenHeight);
+        poison.x = Math.floor(randomX / snakeSize);
+        poison.y = Math.floor(randomY / snakeSize);
+    }
+}
+
+function checkPoisonCollisions(snakeHeadX, snakeHeadY) {
+    if (snakeHeadX == poison.x && snakeHeadY == poison.y) {
+        snake.push({
+            x: 0,
+            y: 0
+        });
+        snakeLength--;
+        var randomX = Math.floor(Math.random() * screenWidth);
+        var randomY = Math.floor(Math.random() * screenHeight);
+        poison.x = Math.floor(randomX / snakeSize);
+        poison.y = Math.floor(randomY / snakeSize);
         var randomX = Math.floor(Math.random() * screenWidth);
         var randomY = Math.floor(Math.random() * screenHeight);
         food.x = Math.floor(randomX / snakeSize);
@@ -258,3 +309,4 @@ function centerMenuPostion(menu) {
 function drawScoreBoard() {
     scoreboard.innerHTML = "Length: " + snakeLength;
 }
+
