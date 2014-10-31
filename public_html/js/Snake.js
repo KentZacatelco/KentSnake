@@ -176,7 +176,7 @@ function poisonInitialize() {
 }
 
 function poisonDraw() {
-    context.fillStyle = "red";
+    context.fillStyle = "purple";
     context.fillRect(poison.x * snakeSize, poison.y * snakeSize, snakeSize, snakeSize);
 }
 
